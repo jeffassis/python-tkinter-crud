@@ -113,4 +113,66 @@ im_lista = ImageTk.PhotoImage(im_lista)
 #CARREGA IMAGEM - LISTA
 l_im_lista= Button(tela_principal, image=im_lista, compound=LEFT, anchor='nw', bg="#353535",bd=0,activebackground="#3b3b3b")
 
+#Janela Que mostra a janela dos dados do banco e sua quantidade de colunas
+tv=ttk.Treeview(tela_principal,columns=("id","rg","nome","telefone","sexo"), show='headings')
+tv.place(x=380, y=150)
+#coluna
+tv.column('id',minwidth=0,width=50)
+tv.column('rg',minwidth=0,width=100)
+tv.column('nome',minwidth=0,width=150)
+tv.column('telefone',minwidth=0,width=100)
+tv.column('sexo',minwidth=0,width=100)
+#cabeçalho
+tv.heading('id',text='ID')
+tv.heading('rg',text='RG')
+tv.heading('nome',text='Nome')
+tv.heading('telefone',text='Telefone')
+tv.heading('sexo',text='Sexo')
+
+#linha
+ttk.Separator(tela_principal, orient=HORIZONTAL).place(x=100,y=405,  width=700)
+
+#PARTE DE BAIXO - IMAGEM E CONTADOR DE PESSOAS, HOMENS E MULHERES
+#CRIA IMAGEM PESSOA
+im_pessoa_crud= Image.open('assets/pessoas.png')
+im_pessoa_crud = im_pessoa_crud.resize((100,100), Image.Resampling.LANCZOS)
+im_pessoa_crud = ImageTk.PhotoImage(im_pessoa_crud)
+#CARREGA IMAGEM PESSOA
+l_pessoa_crud= Label(tela_principal, image=im_pessoa_crud, compound=LEFT, anchor='nw', bg="#353535",bd=0,activebackground="#3b3b3b")
+l_pessoa_crud.place(x=200,y=408)
+
+linha_menu_p_nt = ttk.Separator(tela_principal, orient=HORIZONTAL)
+linha_menu_p_nt.place(x=190, y=510,width=121)
+
+texto_pessoa_contagem = Label(tela_principal, text=" ", font=("Arial Black",40),bg="#353535",fg="#feffff")
+texto_pessoa_contagem .place(x=194,y=515, width=113)
+
+#CRIA IMAGEM HOMEM
+im_homem_crud = Image.open('assets/homem.png')
+im_homem_crud = im_homem_crud.resize((100,100), Image.Resampling.LANCZOS)
+im_homem_crud = ImageTk.PhotoImage(im_homem_crud)
+#CARREGA IMAGEM HOMEM
+l_homem_crud= Label(tela_principal, image=im_homem_crud, compound=LEFT, anchor='nw', bg="#353535",bd=0,activebackground="#3b3b3b")
+l_homem_crud.place(x=400,y=408)
+
+linha_menu_p_nt = ttk.Separator(tela_principal, orient=HORIZONTAL)
+linha_menu_p_nt.place(x=390, y=510,width=121)
+
+texto_homem_contagem = Label(tela_principal, text=" ", font=("Arial Black",40),bg="#353535",fg="#feffff")
+texto_homem_contagem.place(x=394,y=515, width=113)
+
+#CRIA IMAGEM MULHER
+im_mulher_crud = Image.open('assets/mulher.png')
+im_mulher_crud  = im_mulher_crud .resize((100,90), Image.Resampling.LANCZOS)
+im_mulher_crud  = ImageTk.PhotoImage(im_mulher_crud )
+#CARREGA IMAGEM MULHER
+l_mulher_crud = Label(tela_principal, image=im_mulher_crud , compound=LEFT, anchor='nw', bg="#353535",bd=0,activebackground="#3b3b3b")
+l_mulher_crud .place(x=600,y=413)
+
+linha_menu_p_nt = ttk.Separator(tela_principal, orient=HORIZONTAL)
+linha_menu_p_nt.place(x=590, y=510,width=121)
+
+texto_mulher_contagem = Label(tela_principal, text=" ", font=("Arial Black",40),bg="#353535",fg="#feffff")
+texto_mulher_contagem.place(x=594,y=515, width=113)
+
 root.mainloop()
