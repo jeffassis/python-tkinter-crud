@@ -2,13 +2,57 @@ from tkinter import*
 from tkinter import ttk
 import tkinter.messagebox as MessageBox
 from PIL import Image, ImageTk
+from banco import*
 
 #nomes que vc quer no menu escolha
 listSexo=["Masculino","Feminino"]
 
+#FUNÇÕES
+
+#INSERIR
+#------------
+def insert():
+    rg = e_rg.get()
+    name = e_name.get()
+    phone = e_phone.get()
+    sexo = lb_sexo.get()
+
+    lista = [rg, name, phone, sexo]
+
+    #verifica se tem algum campo vazio
+    if(rg == "" or name == "" or phone == "" or sexo == ""):
+        MessageBox.showinfo("Erro", "Todos os campos são obrigatórios")
+    else:
+        inserir_info(lista) 
+        #Após confirmar, apaga as linhas
+        e_rg.delete(0, 'end')
+        e_name.delete(0, 'end')
+        e_phone.delete(0, 'end')
+        lb_sexo.delete(0, 'end')
+        MessageBox.showinfo('Sucesso', 'Os dados foram inseridos com sucesso')
+        show()
+
+#DELETAR
+#------------
+def delete():
+    try:
+        tv_dados = tv.focus()
+        tv_dicionario = tv.item(tv_dados)
+        tv_lista = tv_dicionario['values']
+        valor_id = [tv_lista[0]]
+
+        result = MessageBox.askquestion('Remover dados?', 'Tem certeza que deseja remover dados?')
+        if result == 'yes':        
+            deletar_info(valor_id)
+            MessageBox.showinfo('Sucesso', 'Os dados foram removidos com sucesso')       
+        show()
+    except IndexError:
+        MessageBox.showerror('Erro', 'Seleciona um dos dados na tabela')
+
+
 #CONFIGURACÃO JANELA
 root = Tk()
-root.geometry("900x600+200+50")
+root.geometry("900x430+200+50")
 #root.iconbitmap("assets/crud.ico")
 root.title('Teste de CRUD')
 #FRAME TELA PRINCIPAL
@@ -64,7 +108,7 @@ im_ml_botao = Image.open('assets/bt_inserir.png')
 im_ml_botao  = im_ml_botao.resize((60,30), Image.Resampling.LANCZOS)
 im_ml_botao  = ImageTk.PhotoImage(im_ml_botao )
 #CARREGA IMAGEM INSERIR - BOTAO INSERIR
-l_ml_botao= Button(tela_principal, image=im_ml_botao, compound=LEFT, anchor='nw', 
+l_ml_botao= Button(tela_principal, command=insert,image=im_ml_botao, compound=LEFT, anchor='nw', 
 bg="#3b3b3b",bd=0,activebackground="#3b3b3b")
 l_ml_botao.place(x=20,y=349)
 #CRIA IMAGEM DELETAR
@@ -72,7 +116,7 @@ im_ml_botao1 = Image.open('assets/bt_deletar.png')
 im_ml_botao1  = im_ml_botao1.resize((60,30), Image.Resampling.LANCZOS)
 im_ml_botao1  = ImageTk.PhotoImage(im_ml_botao1 )
 #CARREGA IMAGEM DELETAR - BOTAO DELETAR
-l_ml_botao1= Button(tela_principal, image=im_ml_botao1, compound=LEFT, anchor='nw', 
+l_ml_botao1= Button(tela_principal, command=delete,image=im_ml_botao1, compound=LEFT, anchor='nw', 
 bg="#3b3b3b",bd=0,activebackground="#3b3b3b")
 l_ml_botao1.place(x=100,y=349)
 #CRIA IMAGEM EDITAR
@@ -113,66 +157,26 @@ im_lista = ImageTk.PhotoImage(im_lista)
 #CARREGA IMAGEM - LISTA
 l_im_lista= Button(tela_principal, image=im_lista, compound=LEFT, anchor='nw', bg="#353535",bd=0,activebackground="#3b3b3b")
 
-#Janela Que mostra a janela dos dados do banco e sua quantidade de colunas
-tv=ttk.Treeview(tela_principal,columns=("id","rg","nome","telefone","sexo"), show='headings')
-tv.place(x=380, y=150)
-#coluna
-tv.column('id',minwidth=0,width=50)
-tv.column('rg',minwidth=0,width=100)
-tv.column('nome',minwidth=0,width=150)
-tv.column('telefone',minwidth=0,width=100)
-tv.column('sexo',minwidth=0,width=100)
-#cabeçalho
-tv.heading('id',text='ID')
-tv.heading('rg',text='RG')
-tv.heading('nome',text='Nome')
-tv.heading('telefone',text='Telefone')
-tv.heading('sexo',text='Sexo')
-
 #linha
 ttk.Separator(tela_principal, orient=HORIZONTAL).place(x=100,y=405,  width=700)
 
-#PARTE DE BAIXO - IMAGEM E CONTADOR DE PESSOAS, HOMENS E MULHERES
-#CRIA IMAGEM PESSOA
-im_pessoa_crud= Image.open('assets/pessoas.png')
-im_pessoa_crud = im_pessoa_crud.resize((100,100), Image.Resampling.LANCZOS)
-im_pessoa_crud = ImageTk.PhotoImage(im_pessoa_crud)
-#CARREGA IMAGEM PESSOA
-l_pessoa_crud= Label(tela_principal, image=im_pessoa_crud, compound=LEFT, anchor='nw', bg="#353535",bd=0,activebackground="#3b3b3b")
-l_pessoa_crud.place(x=200,y=408)
+def show():
+   global tv
+   lista = mostrar_info()
+   tabela_head = ['id', 'rg', 'nome', 'telefone', 'sexo']
+   tv = ttk.Treeview(tela_principal, columns=tabela_head, show='headings')
+   tv.place(x=380, y=150)
+   #coluna
+   hd = ["nw", "nw", "nw", "center", "center"]
+   h = [50, 100, 150, 100, 100]
+   n = 0
+   for col in tabela_head:
+    tv.heading(col, text=col.title(), anchor=CENTER)
+    tv.column(col, width=h[n], anchor=hd[n])
+    n += 1
+   for item in lista:
+        tv.insert("","end",values=item)
 
-linha_menu_p_nt = ttk.Separator(tela_principal, orient=HORIZONTAL)
-linha_menu_p_nt.place(x=190, y=510,width=121)
-
-texto_pessoa_contagem = Label(tela_principal, text=" ", font=("Arial Black",40),bg="#353535",fg="#feffff")
-texto_pessoa_contagem .place(x=194,y=515, width=113)
-
-#CRIA IMAGEM HOMEM
-im_homem_crud = Image.open('assets/homem.png')
-im_homem_crud = im_homem_crud.resize((100,100), Image.Resampling.LANCZOS)
-im_homem_crud = ImageTk.PhotoImage(im_homem_crud)
-#CARREGA IMAGEM HOMEM
-l_homem_crud= Label(tela_principal, image=im_homem_crud, compound=LEFT, anchor='nw', bg="#353535",bd=0,activebackground="#3b3b3b")
-l_homem_crud.place(x=400,y=408)
-
-linha_menu_p_nt = ttk.Separator(tela_principal, orient=HORIZONTAL)
-linha_menu_p_nt.place(x=390, y=510,width=121)
-
-texto_homem_contagem = Label(tela_principal, text=" ", font=("Arial Black",40),bg="#353535",fg="#feffff")
-texto_homem_contagem.place(x=394,y=515, width=113)
-
-#CRIA IMAGEM MULHER
-im_mulher_crud = Image.open('assets/mulher.png')
-im_mulher_crud  = im_mulher_crud .resize((100,90), Image.Resampling.LANCZOS)
-im_mulher_crud  = ImageTk.PhotoImage(im_mulher_crud )
-#CARREGA IMAGEM MULHER
-l_mulher_crud = Label(tela_principal, image=im_mulher_crud , compound=LEFT, anchor='nw', bg="#353535",bd=0,activebackground="#3b3b3b")
-l_mulher_crud .place(x=600,y=413)
-
-linha_menu_p_nt = ttk.Separator(tela_principal, orient=HORIZONTAL)
-linha_menu_p_nt.place(x=590, y=510,width=121)
-
-texto_mulher_contagem = Label(tela_principal, text=" ", font=("Arial Black",40),bg="#353535",fg="#feffff")
-texto_mulher_contagem.place(x=594,y=515, width=113)
+show()
 
 root.mainloop()
