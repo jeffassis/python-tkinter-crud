@@ -27,3 +27,10 @@ def deletar_info(i):
         cur = con.cursor()
         query = "DELETE FROM cadastro WHERE id=?"
         cur.execute(query, i)
+
+# Atualizar informações
+def atualizar_info(i):
+    with con:
+        cur = con.cursor()
+        query = "UPDATE cadastro SET rg=?, name=?, phone=?, sexo=? WHERE id=?"
+        cur.execute(query, i)

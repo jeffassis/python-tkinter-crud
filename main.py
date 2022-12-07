@@ -4,7 +4,7 @@ import tkinter.messagebox as MessageBox
 from PIL import Image, ImageTk
 from banco import*
 
-#nomes que vc quer no menu escolha
+# Opções ComboBox
 listSexo=["Masculino","Feminino"]
 
 #FUNÇÕES
@@ -49,6 +49,58 @@ def delete():
     except IndexError:
         MessageBox.showerror('Erro', 'Seleciona um dos dados na tabela')
 
+#ATUALIZAR
+#------------
+def update():
+    bt_add.config(state='disabled')
+    bt_delete.config(state='disabled')
+    bt_editar.config(state='disabled')
+    try:
+        tv_dados = tv.focus()
+        tv_dicionario = tv.item(tv_dados)
+        tv_lista = tv_dicionario['values']
+
+        valor_id = tv_lista[0]
+        
+        e_rg.delete(0, 'end')
+        e_name.delete(0, 'end')
+        e_phone.delete(0, 'end')
+        lb_sexo.delete(0, 'end')
+
+        e_rg.insert(0, tv_lista[1])
+        e_name.insert(0, tv_lista[2])
+        e_phone.insert(0, tv_lista[3])
+        lb_sexo.insert(0, tv_lista[4])
+        
+        def atualiza():
+           rg = e_rg.get()
+           name = e_name.get()
+           phone = e_phone.get()
+           sexo = lb_sexo.get()
+
+           lista = [rg, name, phone, sexo, valor_id]
+           #verifica se tem algum campo vazio
+           if(rg == "" or name == "" or phone == "" or sexo == ""):
+                MessageBox.showinfo("Erro", "Todos os campos são obrigatórios")
+           else:
+                atualizar_info(lista)
+                MessageBox.showinfo('Sucesso', 'Os dados foram inseridos com sucesso')
+
+                e_rg.delete(0, 'end')
+                e_name.delete(0, 'end')
+                e_phone.delete(0, 'end')
+                lb_sexo.delete(0, 'end')
+           b_confirma.destroy()
+           bt_add.config(state='normal')
+           bt_delete.config(state='normal')
+           bt_editar.config(state='normal')
+           show()
+        #CRIA IMAGEM CONFIRMAR
+        b_confirma = Button(tela_principal, command=atualiza, text='OK', width=4,
+                             font=('Ivy 7'), bg='lightyellow',relief='raised', overrelief='ridge')
+        b_confirma.place(x=193, y=355)
+    except IndexError:
+        MessageBox.showerror('Erro', 'Seleciona um dos dados na tabela')
 
 #CONFIGURACÃO JANELA
 root = Tk()
@@ -108,33 +160,33 @@ im_ml_botao = Image.open('assets/bt_inserir.png')
 im_ml_botao  = im_ml_botao.resize((60,30), Image.Resampling.LANCZOS)
 im_ml_botao  = ImageTk.PhotoImage(im_ml_botao )
 #CARREGA IMAGEM INSERIR - BOTAO INSERIR
-l_ml_botao= Button(tela_principal, command=insert,image=im_ml_botao, compound=LEFT, anchor='nw', 
+bt_add= Button(tela_principal, command=insert,image=im_ml_botao, compound=LEFT, anchor='nw', 
 bg="#3b3b3b",bd=0,activebackground="#3b3b3b")
-l_ml_botao.place(x=20,y=349)
+bt_add.place(x=20,y=349)
 #CRIA IMAGEM DELETAR
 im_ml_botao1 = Image.open('assets/bt_deletar.png')
 im_ml_botao1  = im_ml_botao1.resize((60,30), Image.Resampling.LANCZOS)
 im_ml_botao1  = ImageTk.PhotoImage(im_ml_botao1 )
 #CARREGA IMAGEM DELETAR - BOTAO DELETAR
-l_ml_botao1= Button(tela_principal, command=delete,image=im_ml_botao1, compound=LEFT, anchor='nw', 
+bt_delete= Button(tela_principal, command=delete,image=im_ml_botao1, compound=LEFT, anchor='nw', 
 bg="#3b3b3b",bd=0,activebackground="#3b3b3b")
-l_ml_botao1.place(x=100,y=349)
+bt_delete.place(x=100,y=349)
 #CRIA IMAGEM EDITAR
 im_ml_botao2 = Image.open('assets/bt_editar.png')
 im_ml_botao2  = im_ml_botao2.resize((60,30), Image.Resampling.LANCZOS)
 im_ml_botao2  = ImageTk.PhotoImage(im_ml_botao2 )
 #CARREGA IMAGEM EDITAR - BOTAO EDITAR
-l_ml_botao2= Button(tela_principal, image=im_ml_botao2, compound=LEFT, anchor='nw', 
+bt_editar= Button(tela_principal, command=update, image=im_ml_botao2, compound=LEFT, anchor='nw', 
 bg="#3b3b3b",bd=0,activebackground="#3b3b3b")
-l_ml_botao2.place(x=180,y=349)
+bt_editar.place(x=180,y=349)
 #CRIA IMAGEM BUSCAR
 im_ml_botao3 = Image.open('assets/bt_buscar.png')
 im_ml_botao3  = im_ml_botao3.resize((60,30), Image.Resampling.LANCZOS)
 im_ml_botao3  = ImageTk.PhotoImage(im_ml_botao3 )
 #CARREGA IMAGEM BUSCAR - BOTAO BUSCAR
-l_ml_botao3= Button(tela_principal, image=im_ml_botao3, compound=LEFT, anchor='nw', 
+bt_buscar= Button(tela_principal, image=im_ml_botao3, compound=LEFT, anchor='nw', 
 bg="#3b3b3b",bd=0,activebackground="#3b3b3b")
-l_ml_botao3.place(x=260,y=349)
+bt_buscar.place(x=260,y=349)
 
 #PARTE PESQUISA E PAINEL DE DADOS
 #CRIA IMAGEM Pesquisar
