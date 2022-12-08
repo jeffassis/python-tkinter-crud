@@ -5,10 +5,8 @@ from PIL import Image, ImageTk
 from banco import*
 import sqlite3 as lite
 
-# Opções ComboBox
+# OPÇÕES COMBOBOX
 listSexo=["Masculino","Feminino"]
-
-#FUNÇÕES
 
 #INSERIR
 #------------
@@ -20,12 +18,12 @@ def insert():
 
     lista = [rg, name, phone, sexo]
 
-    #verifica se tem algum campo vazio
+    #VERIFICA SE TEM CAMPO VAZIO
     if(rg == "" or name == "" or phone == "" or sexo == ""):
         MessageBox.showinfo("Erro", "Todos os campos são obrigatórios")
     else:
         inserir_info(lista) 
-        #Após confirmar, apaga as linhas
+        #APÓS CONFIRMAR, APAGA AS LINHAS
         e_rg.delete(0, 'end')
         e_name.delete(0, 'end')
         e_phone.delete(0, 'end')
@@ -41,7 +39,7 @@ def delete():
         tv_dicionario = tv.item(tv_dados)
         tv_lista = tv_dicionario['values']
         valor_id = [tv_lista[0]]
-
+        #ESTRUTURA DE DECISÃO EM JANELA PARA CONFIRMAR A REMOÇÃO DE DADOS
         result = MessageBox.askquestion('Remover dados?', 'Tem certeza que deseja remover dados?')
         if result == 'yes':        
             deletar_info(valor_id)
@@ -78,7 +76,7 @@ def update():
            sexo = lb_sexo.get()
 
            lista = [rg, name, phone, sexo, valor_id]
-           #verifica se tem algum campo vazio
+           #VERIFICA SE OS CAMPOS ESTÃO VAZIOS
            if(rg == "" or name == "" or phone == "" or sexo == ""):
                 MessageBox.showinfo("Erro", "Todos os campos são obrigatórios")
            else:
@@ -89,13 +87,13 @@ def update():
                 e_name.delete(0, 'end')
                 e_phone.delete(0, 'end')
                 lb_sexo.delete(0, 'end')
-           b_confirma.destroy()
+           bt_confirmar.place_forget()
            bt_add.config(state='normal')
            show()
-        #CRIA IMAGEM CONFIRMAR
-        b_confirma = Button(tela_principal, command=atualiza, text='CONFIRMA', width=9, height=2,
-                             font=('arial 8'), bg='lightyellow',relief='raised', overrelief='ridge')
-        b_confirma.place(x=260,y=349)
+        #CARREGA IMAGEM BUSCAR - BOTAO BUSCAR
+        bt_confirmar= Button(tela_principal, image=im_ml_botao3, compound=LEFT, anchor='nw', 
+        bg="#3b3b3b",bd=0,activebackground="#3b3b3b", command=atualiza)
+        bt_confirmar.place(x=260,y=349)
     except IndexError:
         MessageBox.showerror('Erro', 'Seleciona um dos dados na tabela')
 
@@ -104,8 +102,7 @@ def consulta(event=None):
     if(like == ""):
         MessageBox.showinfo("Status", "Campo Obrigatório")
     else:
-        
-            #CRIANDO CONEXÂO
+        #CRIANDO CONEXÂO
         with lite.connect('dados.db') as db:
             cur = db.cursor()
             query = (f"SELECT * FROM cadastro WHERE name like '%{e_name1.get().strip()}%'")
@@ -116,11 +113,12 @@ def consulta(event=None):
         for row in rows:
             tv.insert("", "end", values=row)       
         bt_lista.place(x=380, y=100)
+
 #CONFIGURACÃO JANELA
 root = Tk()
 root.geometry("900x430+200+50")
-#root.iconbitmap("assets/crud.ico")
 root.title('Teste de CRUD')
+
 #FRAME TELA PRINCIPAL
 tela_principal = Frame(root, bg="#353535")
 tela_principal.place(x=0, y=0, width=900, height=600)
@@ -136,6 +134,7 @@ texto_admin.place(x=29, y=95)
 im_admin_crud = Image.open('assets/admin.png')
 im_admin_crud = im_admin_crud.resize((60,60), Image.Resampling.LANCZOS)
 im_admin_crud = ImageTk.PhotoImage(im_admin_crud)
+
 #CARREGA IMAGEM ADMIN-CRUD
 l_admin_crud= Label(tela_principal, image=im_admin_crud, compound=LEFT, anchor='nw', bg="#353535",bd=0,activebackground="#3b3b3b")
 l_admin_crud.place(x=261,y=95)
@@ -158,12 +157,15 @@ nomesexo1.place(x=20,y=296)
 #RG
 e_rg = Entry(tela_principal, width=23,font=1)
 e_rg.place(x=120, y=180)
+
 #NOME
 e_name = Entry(tela_principal, width=23,font=1)
 e_name.place(x=120, y=220)
+
 #TELEFONE
 e_phone = Entry(tela_principal, width=23, font=1)
 e_phone.place(x=120, y=260)
+
 #ESCOLHA SEXO
 lb_sexo = ttk.Combobox(tela_principal, values=listSexo, font=1)
 lb_sexo.place(x=120,y=300, width=180)
@@ -177,6 +179,7 @@ im_ml_botao  = ImageTk.PhotoImage(im_ml_botao )
 bt_add= Button(tela_principal, command=insert,image=im_ml_botao, compound=LEFT, anchor='nw', 
 bg="#3b3b3b",bd=0,activebackground="#3b3b3b")
 bt_add.place(x=20,y=349)
+
 #CRIA IMAGEM DELETAR
 im_ml_botao1 = Image.open('assets/bt_deletar.png')
 im_ml_botao1  = im_ml_botao1.resize((60,30), Image.Resampling.LANCZOS)
@@ -185,6 +188,7 @@ im_ml_botao1  = ImageTk.PhotoImage(im_ml_botao1 )
 bt_delete= Button(tela_principal, command=delete,image=im_ml_botao1, compound=LEFT, anchor='nw', 
 bg="#3b3b3b",bd=0,activebackground="#3b3b3b")
 bt_delete.place(x=100,y=349)
+
 #CRIA IMAGEM EDITAR
 im_ml_botao2 = Image.open('assets/bt_editar.png')
 im_ml_botao2  = im_ml_botao2.resize((60,30), Image.Resampling.LANCZOS)
@@ -193,6 +197,11 @@ im_ml_botao2  = ImageTk.PhotoImage(im_ml_botao2 )
 bt_editar= Button(tela_principal, command=update, image=im_ml_botao2, compound=LEFT, anchor='nw', 
 bg="#3b3b3b",bd=0,activebackground="#3b3b3b")
 bt_editar.place(x=180,y=349)
+
+#CRIA IMAGEM CONFIRMAR
+im_ml_botao3 = Image.open('assets/bt_confirmar.png')
+im_ml_botao3  = im_ml_botao3.resize((60,30), Image.Resampling.LANCZOS)
+im_ml_botao3  = ImageTk.PhotoImage(im_ml_botao3 )
 
 #PARTE PESQUISA E PAINEL DE DADOS
 #CRIA IMAGEM Pesquisar
@@ -203,13 +212,15 @@ im_ml_pesquisa = ImageTk.PhotoImage(im_ml_pesquisa)
 bt_pesquisa= Button(tela_principal, image=im_ml_pesquisa, compound=LEFT, anchor='nw', 
 bg="#353535",bd=0,activebackground="#353535", command=consulta)
 bt_pesquisa.place(x=460,y=95)
-#PESQUISA
+
+# CAMPO TEXTO PESQUISA
 e_name1 = Entry(tela_principal, width=32,bd=0,bg="#353535",fg="white", insertbackground="white",font=1)
 e_name1.place(x=510, y=95)
+
 #SEPARADOR
 ttk.Separator(tela_principal, orient=HORIZONTAL).place(x=510,y=120,  width=290)
 
-#linha
+#LINHA
 ttk.Separator(tela_principal, orient=HORIZONTAL).place(x=100,y=405,  width=700)
 
 # MOSTRA DADOS NA TABELA
@@ -220,7 +231,7 @@ def show():
    tabela_head = ['id', 'rg', 'nome', 'telefone', 'sexo']
    tv = ttk.Treeview(tela_principal, columns=tabela_head, show='headings')
    tv.place(x=380, y=150)
-   #coluna
+   #COLUNA
    hd = ["nw", "nw", "nw", "center", "center"]
    h = [50, 100, 150, 100, 100]
    n = 0
