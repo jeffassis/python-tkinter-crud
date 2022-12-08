@@ -22,6 +22,7 @@ def mostrar_info():
             lista.append(i)
     return lista
 
+# Deletar informações
 def deletar_info(i):
     with con:
         cur = con.cursor()
@@ -33,4 +34,4 @@ def atualizar_info(i):
     with con:
         cur = con.cursor()
         query = "UPDATE cadastro SET rg=?, name=?, phone=?, sexo=? WHERE id=?"
-        cur.execute(query, i)
+        cur.execute(query, i) 

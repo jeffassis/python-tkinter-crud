@@ -3,6 +3,7 @@ from tkinter import ttk
 import tkinter.messagebox as MessageBox
 from PIL import Image, ImageTk
 from banco import*
+import sqlite3 as lite
 
 # Opções ComboBox
 listSexo=["Masculino","Feminino"]
@@ -53,8 +54,6 @@ def delete():
 #------------
 def update():
     bt_add.config(state='disabled')
-    bt_delete.config(state='disabled')
-    bt_editar.config(state='disabled')
     try:
         tv_dados = tv.focus()
         tv_dicionario = tv.item(tv_dados)
@@ -84,7 +83,7 @@ def update():
                 MessageBox.showinfo("Erro", "Todos os campos são obrigatórios")
            else:
                 atualizar_info(lista)
-                MessageBox.showinfo('Sucesso', 'Os dados foram inseridos com sucesso')
+                MessageBox.showinfo('Sucesso', 'Os dados foram atualizados com sucesso')
 
                 e_rg.delete(0, 'end')
                 e_name.delete(0, 'end')
@@ -92,16 +91,31 @@ def update():
                 lb_sexo.delete(0, 'end')
            b_confirma.destroy()
            bt_add.config(state='normal')
-           bt_delete.config(state='normal')
-           bt_editar.config(state='normal')
            show()
         #CRIA IMAGEM CONFIRMAR
-        b_confirma = Button(tela_principal, command=atualiza, text='OK', width=4,
-                             font=('Ivy 7'), bg='lightyellow',relief='raised', overrelief='ridge')
-        b_confirma.place(x=193, y=355)
+        b_confirma = Button(tela_principal, command=atualiza, text='CONFIRMA', width=9, height=2,
+                             font=('arial 8'), bg='lightyellow',relief='raised', overrelief='ridge')
+        b_confirma.place(x=260,y=349)
     except IndexError:
         MessageBox.showerror('Erro', 'Seleciona um dos dados na tabela')
 
+def consulta(event=None):
+    like = e_name1.get()
+    if(like == ""):
+        MessageBox.showinfo("Status", "Campo Obrigatório")
+    else:
+        
+            #CRIANDO CONEXÂO
+        with lite.connect('dados.db') as db:
+            cur = db.cursor()
+            query = (f"SELECT * FROM cadastro WHERE name like '%{e_name1.get().strip()}%'")
+            cur.execute(query)
+            rows = cur.fetchall()
+        #DELETA TODOS OS DADOS PARA NÂO DUPLICAR
+        tv.delete(*tv.get_children())
+        for row in rows:
+            tv.insert("", "end", values=row)       
+        bt_lista.place(x=380, y=100)
 #CONFIGURACÃO JANELA
 root = Tk()
 root.geometry("900x430+200+50")
@@ -179,14 +193,6 @@ im_ml_botao2  = ImageTk.PhotoImage(im_ml_botao2 )
 bt_editar= Button(tela_principal, command=update, image=im_ml_botao2, compound=LEFT, anchor='nw', 
 bg="#3b3b3b",bd=0,activebackground="#3b3b3b")
 bt_editar.place(x=180,y=349)
-#CRIA IMAGEM BUSCAR
-im_ml_botao3 = Image.open('assets/bt_buscar.png')
-im_ml_botao3  = im_ml_botao3.resize((60,30), Image.Resampling.LANCZOS)
-im_ml_botao3  = ImageTk.PhotoImage(im_ml_botao3 )
-#CARREGA IMAGEM BUSCAR - BOTAO BUSCAR
-bt_buscar= Button(tela_principal, image=im_ml_botao3, compound=LEFT, anchor='nw', 
-bg="#3b3b3b",bd=0,activebackground="#3b3b3b")
-bt_buscar.place(x=260,y=349)
 
 #PARTE PESQUISA E PAINEL DE DADOS
 #CRIA IMAGEM Pesquisar
@@ -194,26 +200,22 @@ im_ml_pesquisa = Image.open('assets/pesquisab.png')
 im_ml_pesquisa = im_ml_pesquisa.resize((30,30), Image.Resampling.LANCZOS)
 im_ml_pesquisa = ImageTk.PhotoImage(im_ml_pesquisa)
 #CARREGA IMAGEM Pesquisar
-l_ml_pesquisa= Button(tela_principal, image=im_ml_pesquisa, compound=LEFT, anchor='nw', 
-bg="#353535",bd=0,activebackground="#353535")
-l_ml_pesquisa.place(x=460,y=95)
+bt_pesquisa= Button(tela_principal, image=im_ml_pesquisa, compound=LEFT, anchor='nw', 
+bg="#353535",bd=0,activebackground="#353535", command=consulta)
+bt_pesquisa.place(x=460,y=95)
 #PESQUISA
 e_name1 = Entry(tela_principal, width=32,bd=0,bg="#353535",fg="white", insertbackground="white",font=1)
 e_name1.place(x=510, y=95)
 #SEPARADOR
 ttk.Separator(tela_principal, orient=HORIZONTAL).place(x=510,y=120,  width=290)
-#CRIA IMAGEM - LISTA
-im_lista = Image.open('assets/lista.png')
-im_lista = im_lista.resize((40,40), Image.Resampling.LANCZOS)
-im_lista = ImageTk.PhotoImage(im_lista)
-#CARREGA IMAGEM - LISTA
-l_im_lista= Button(tela_principal, image=im_lista, compound=LEFT, anchor='nw', bg="#353535",bd=0,activebackground="#3b3b3b")
 
 #linha
 ttk.Separator(tela_principal, orient=HORIZONTAL).place(x=100,y=405,  width=700)
 
+# MOSTRA DADOS NA TABELA
 def show():
    global tv
+   bt_lista.place_forget()
    lista = mostrar_info()
    tabela_head = ['id', 'rg', 'nome', 'telefone', 'sexo']
    tv = ttk.Treeview(tela_principal, columns=tabela_head, show='headings')
@@ -229,6 +231,13 @@ def show():
    for item in lista:
         tv.insert("","end",values=item)
 
-show()
+#CRIA IMAGEM - LISTA
+im_lista = Image.open('assets/lista.png')
+im_lista = im_lista.resize((40,40), Image.Resampling.LANCZOS)
+im_lista = ImageTk.PhotoImage(im_lista)
+#CARREGA IMAGEM - LISTA
+bt_lista= Button(tela_principal, command=show, image=im_lista, compound=LEFT, anchor='nw', bg="#353535",bd=0,activebackground="#3b3b3b")
 
+root.bind('<Return>', consulta)
+show()
 root.mainloop()
