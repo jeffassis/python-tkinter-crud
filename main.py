@@ -90,8 +90,8 @@ def update():
            bt_confirmar.place_forget()
            bt_add.config(state='normal')
            show()
-        #CARREGA IMAGEM BUSCAR - BOTAO BUSCAR
-        bt_confirmar= Button(tela_principal, image=im_ml_botao3, compound=LEFT, anchor='nw', 
+        #CARREGA IMAGEM CONFIRMAR - BOTAO CONFIRMAR
+        bt_confirmar= Button(tela_principal, image=img_confirmar, compound=LEFT, anchor='nw', 
         bg="#3b3b3b",bd=0,activebackground="#3b3b3b", command=atualiza)
         bt_confirmar.place(x=260,y=349)
     except IndexError:
@@ -121,7 +121,7 @@ root.title('Teste de CRUD')
 
 #FRAME TELA PRINCIPAL
 tela_principal = Frame(root, bg="#353535")
-tela_principal.place(x=0, y=0, width=900, height=600)
+tela_principal.place(x=0, y=0, width=900, height=430)
 
 #TITULO
 texto = Label(tela_principal, text="Teste de CRUD", font=("Arial Black",25), bg="#353535", fg="white")
@@ -131,12 +131,12 @@ texto_admin = Label(tela_principal, text="Administrador", font=("Arial Black",22
 texto_admin.place(x=29, y=95)
 
 #CRIA IMAGEM ADMIN-CRUD
-im_admin_crud = Image.open('assets/admin.png')
-im_admin_crud = im_admin_crud.resize((60,60), Image.Resampling.LANCZOS)
-im_admin_crud = ImageTk.PhotoImage(im_admin_crud)
+img_admin = Image.open('assets/admin.png')
+img_admin = img_admin.resize((60,60), Image.Resampling.LANCZOS)
+img_admin = ImageTk.PhotoImage(img_admin)
 
 #CARREGA IMAGEM ADMIN-CRUD
-l_admin_crud= Label(tela_principal, image=im_admin_crud, compound=LEFT, anchor='nw', bg="#353535",bd=0,activebackground="#3b3b3b")
+l_admin_crud= Label(tela_principal, image=img_admin, compound=LEFT, anchor='nw', bg="#353535",bd=0,activebackground="#3b3b3b")
 l_admin_crud.place(x=261,y=95)
 
 #TEXTOS
@@ -172,44 +172,44 @@ lb_sexo.place(x=120,y=300, width=180)
 
 #BOTÕES DE FUNÇÕES CRUD
 #CRIA IMAGEM INSERIR
-im_ml_botao = Image.open('assets/bt_inserir.png')
-im_ml_botao  = im_ml_botao.resize((60,30), Image.Resampling.LANCZOS)
-im_ml_botao  = ImageTk.PhotoImage(im_ml_botao )
+img_inserir = Image.open('assets/bt_inserir.png')
+img_inserir  = img_inserir.resize((60,30), Image.Resampling.LANCZOS)
+img_inserir  = ImageTk.PhotoImage(img_inserir )
 #CARREGA IMAGEM INSERIR - BOTAO INSERIR
-bt_add= Button(tela_principal, command=insert,image=im_ml_botao, compound=LEFT, anchor='nw', 
+bt_add= Button(tela_principal, command=insert,image=img_inserir, compound=LEFT, anchor='nw', 
 bg="#3b3b3b",bd=0,activebackground="#3b3b3b")
 bt_add.place(x=20,y=349)
 
 #CRIA IMAGEM DELETAR
-im_ml_botao1 = Image.open('assets/bt_deletar.png')
-im_ml_botao1  = im_ml_botao1.resize((60,30), Image.Resampling.LANCZOS)
-im_ml_botao1  = ImageTk.PhotoImage(im_ml_botao1 )
+img_deletar = Image.open('assets/bt_deletar.png')
+img_deletar  = img_deletar.resize((60,30), Image.Resampling.LANCZOS)
+img_deletar  = ImageTk.PhotoImage(img_deletar )
 #CARREGA IMAGEM DELETAR - BOTAO DELETAR
-bt_delete= Button(tela_principal, command=delete,image=im_ml_botao1, compound=LEFT, anchor='nw', 
+bt_delete= Button(tela_principal, command=delete,image=img_deletar, compound=LEFT, anchor='nw', 
 bg="#3b3b3b",bd=0,activebackground="#3b3b3b")
 bt_delete.place(x=100,y=349)
 
 #CRIA IMAGEM EDITAR
-im_ml_botao2 = Image.open('assets/bt_editar.png')
-im_ml_botao2  = im_ml_botao2.resize((60,30), Image.Resampling.LANCZOS)
-im_ml_botao2  = ImageTk.PhotoImage(im_ml_botao2 )
+img_editar = Image.open('assets/bt_editar.png')
+img_editar  = img_editar.resize((60,30), Image.Resampling.LANCZOS)
+img_editar  = ImageTk.PhotoImage(img_editar )
 #CARREGA IMAGEM EDITAR - BOTAO EDITAR
-bt_editar= Button(tela_principal, command=update, image=im_ml_botao2, compound=LEFT, anchor='nw', 
+bt_editar= Button(tela_principal, command=update, image=img_editar, compound=LEFT, anchor='nw', 
 bg="#3b3b3b",bd=0,activebackground="#3b3b3b")
 bt_editar.place(x=180,y=349)
 
-#CRIA IMAGEM CONFIRMAR
-im_ml_botao3 = Image.open('assets/bt_confirmar.png')
-im_ml_botao3  = im_ml_botao3.resize((60,30), Image.Resampling.LANCZOS)
-im_ml_botao3  = ImageTk.PhotoImage(im_ml_botao3 )
+#CRIA IMAGEM CONFIRMAR - BOTAO CONFIRMAR
+img_confirmar = Image.open('assets/bt_confirmar.png')
+img_confirmar  = img_confirmar.resize((60,30), Image.Resampling.LANCZOS)
+img_confirmar  = ImageTk.PhotoImage(img_confirmar )
 
 #PARTE PESQUISA E PAINEL DE DADOS
 #CRIA IMAGEM Pesquisar
-im_ml_pesquisa = Image.open('assets/pesquisab.png')
-im_ml_pesquisa = im_ml_pesquisa.resize((30,30), Image.Resampling.LANCZOS)
-im_ml_pesquisa = ImageTk.PhotoImage(im_ml_pesquisa)
+img_pesquisa = Image.open('assets/pesquisab.png')
+img_pesquisa = img_pesquisa.resize((30,30), Image.Resampling.LANCZOS)
+img_pesquisa = ImageTk.PhotoImage(img_pesquisa)
 #CARREGA IMAGEM Pesquisar
-bt_pesquisa= Button(tela_principal, image=im_ml_pesquisa, compound=LEFT, anchor='nw', 
+bt_pesquisa= Button(tela_principal, image=img_pesquisa, compound=LEFT, anchor='nw', 
 bg="#353535",bd=0,activebackground="#353535", command=consulta)
 bt_pesquisa.place(x=460,y=95)
 
@@ -243,11 +243,11 @@ def show():
         tv.insert("","end",values=item)
 
 #CRIA IMAGEM - LISTA
-im_lista = Image.open('assets/lista.png')
-im_lista = im_lista.resize((40,40), Image.Resampling.LANCZOS)
-im_lista = ImageTk.PhotoImage(im_lista)
+img_lista = Image.open('assets/lista.png')
+img_lista = img_lista.resize((40,40), Image.Resampling.LANCZOS)
+img_lista = ImageTk.PhotoImage(img_lista)
 #CARREGA IMAGEM - LISTA
-bt_lista= Button(tela_principal, command=show, image=im_lista, compound=LEFT, anchor='nw', bg="#353535",bd=0,activebackground="#3b3b3b")
+bt_lista= Button(tela_principal, command=show, image=img_lista, compound=LEFT, anchor='nw', bg="#353535",bd=0,activebackground="#3b3b3b")
 
 root.bind('<Return>', consulta)
 show()
