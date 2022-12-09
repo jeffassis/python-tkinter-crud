@@ -3,7 +3,6 @@ from tkinter import ttk
 import tkinter.messagebox as MessageBox
 from PIL import Image, ImageTk
 from banco import*
-import sqlite3 as lite
 
 # OPÇÕES COMBOBOX
 listSexo=["Masculino","Feminino"]
@@ -12,11 +11,9 @@ listSexo=["Masculino","Feminino"]
 #------------
 def insert():
     try:
-        with lite.connect('dados.db') as db:
-            cur = db.cursor()
-        find_name = ('SELECT * FROM cadastro WHERE name = ?')
-        cur.execute(find_name,[(e_name.get())])
-        result = cur.fetchall()
+        # VERIFICA SE O NOME JA FOI INSERIDO
+        param = e_name.get()
+        result = pesquisa_info_nome(param)
         if result:
             MessageBox.showerror("Error",'Inserir dados diferentes')
         else:
@@ -111,12 +108,8 @@ def consulta(event=None):
     if(like == ""):
         MessageBox.showinfo("Status", "Campo Obrigatório")
     else:
-        #CRIANDO CONEXÂO
-        with lite.connect('dados.db') as db:
-            cur = db.cursor()
-            query = (f"SELECT * FROM cadastro WHERE name like '%{e_name1.get().strip()}%'")
-            cur.execute(query)
-            rows = cur.fetchall()
+        param = e_name1.get().strip()
+        rows = consulta_info(param)
         #DELETA TODOS OS DADOS PARA NÂO DUPLICAR
         tv.delete(*tv.get_children())
         for row in rows:
