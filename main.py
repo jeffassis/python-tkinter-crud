@@ -11,25 +11,36 @@ listSexo=["Masculino","Feminino"]
 #INSERIR
 #------------
 def insert():
-    rg = e_rg.get()
-    name = e_name.get()
-    phone = e_phone.get()
-    sexo = lb_sexo.get()
+    try:
+        with lite.connect('dados.db') as db:
+            cur = db.cursor()
+        find_name = ('SELECT * FROM cadastro WHERE name = ?')
+        cur.execute(find_name,[(e_name.get())])
+        result = cur.fetchall()
+        if result:
+            MessageBox.showerror("Error",'Inserir dados diferentes')
+        else:
+            rg = e_rg.get()
+            name = e_name.get()
+            phone = e_phone.get()
+            sexo = lb_sexo.get()
 
-    lista = [rg, name, phone, sexo]
+            lista = [rg, name, phone, sexo]
 
-    #VERIFICA SE TEM CAMPO VAZIO
-    if(rg == "" or name == "" or phone == "" or sexo == ""):
-        MessageBox.showinfo("Erro", "Todos os campos são obrigatórios")
-    else:
-        inserir_info(lista) 
-        #APÓS CONFIRMAR, APAGA AS LINHAS
-        e_rg.delete(0, 'end')
-        e_name.delete(0, 'end')
-        e_phone.delete(0, 'end')
-        lb_sexo.delete(0, 'end')
-        MessageBox.showinfo('Sucesso', 'Os dados foram inseridos com sucesso')
-        show()
+            #VERIFICA SE TEM CAMPO VAZIO
+            if(rg == "" or name == "" or phone == "" or sexo == ""):
+                MessageBox.showinfo("Erro", "Todos os campos são obrigatórios")
+            else:
+                inserir_info(lista) 
+                #APÓS CONFIRMAR, APAGA AS LINHAS
+                e_rg.delete(0, 'end')
+                e_name.delete(0, 'end')
+                e_phone.delete(0, 'end')
+                lb_sexo.delete(0, 'end')
+                MessageBox.showinfo('Sucesso', 'Os dados foram inseridos com sucesso')
+                show()
+    except Exception as es:
+                MessageBox.showerror("Error", f"Error Due to: {str(es)}", parent=tela_principal)
 
 #DELETAR
 #------------
@@ -46,12 +57,11 @@ def delete():
             MessageBox.showinfo('Sucesso', 'Os dados foram removidos com sucesso')       
         show()
     except IndexError:
-        MessageBox.showerror('Erro', 'Seleciona um dos dados na tabela')
+        MessageBox.showerror('Erro', 'Selecione um registro na tabela')
 
 #ATUALIZAR
 #------------
 def update():
-    bt_add.config(state='disabled')
     try:
         tv_dados = tv.focus()
         tv_dicionario = tv.item(tv_dados)
@@ -88,14 +98,13 @@ def update():
                 e_phone.delete(0, 'end')
                 lb_sexo.delete(0, 'end')
            bt_confirmar.place_forget()
-           bt_add.config(state='normal')
            show()
         #CARREGA IMAGEM CONFIRMAR - BOTAO CONFIRMAR
         bt_confirmar= Button(tela_principal, image=img_confirmar, compound=LEFT, anchor='nw', 
         bg="#3b3b3b",bd=0,activebackground="#3b3b3b", command=atualiza)
         bt_confirmar.place(x=260,y=349)
     except IndexError:
-        MessageBox.showerror('Erro', 'Seleciona um dos dados na tabela')
+        MessageBox.showerror('Erro', 'Selecione um registro na tabela')
 
 def consulta(event=None):
     like = e_name1.get()
